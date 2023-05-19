@@ -103,7 +103,7 @@ type Card struct {
 	Value  int
 }
 
-// NewCard creates a new card and return the pointer
+// NewCard creates a new card and returns the pointer
 func NewCard(ID int, color CardColor, number CardNumber) *Card {
 	card := new(Card)
 	card.ID = ID

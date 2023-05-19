@@ -9,5 +9,5 @@ type Service struct {
 
 // NewService initializes the Service
 func NewService() *Service {
-	return &Service{Game: game.NewGame()}
+	return &Service{}
 }
