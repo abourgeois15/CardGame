@@ -8,7 +8,7 @@ import (
 )
 
 // SetupRouter initializes the router's routes and returns it
-func SetupRouter(service *service.Service) chi.Router {
+func SetupRouter(s *service.Service) chi.Router {
 	var r chi.Router = chi.NewRouter()
 	r.Use(cors.Handler(cors.Options{
 		AllowedOrigins: []string{"*"},
@@ -16,6 +16,6 @@ func SetupRouter(service *service.Service) chi.Router {
 		ExposedHeaders: []string{"Content-Types"},
 	}))
 	// Setting up routes
+	r.Get("/game/{NbPlayers}", s.GetGame)
 	return r
-
 }

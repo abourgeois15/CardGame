@@ -5,54 +5,56 @@ import (
 	"time"
 )
 
+// Constantes for game
 const (
-	cardDeckSize  = 52
-	nbCardByColor = 13
+	CardDeckSize  = 52
+	NbCardByColor = 13
 
-	nbPlayersMin  = 2
-	firstPlayerID = 0
+	NbPlayersMin  = 2
+	NbPlayersMax  = 4
+	FirstPlayerID = 0
 
-	firstTurnID = 1
+	FirstTurnID = 1
 )
 
 // Game is the struct with all the ongoing game info
 type Game struct {
-	NbPlayer    int
+	NbPlayers   int
 	CardDeck    []*Card
 	Players     []*Player
-	firstPlayer *Player
+	FirstPlayer *Player
 	OngoingTurn *Turn
 }
 
 // NewGame creates a new game pointer with players and cards
-func NewGame(nbPlayer int) *Game {
+func NewGame(nbPlayers int) *Game {
 	game := new(Game)
 	game.createCardDeck()
-	game.NbPlayer = nbPlayer
-	game.Players = make([]*Player, nbPlayer)
+	game.NbPlayers = nbPlayers
+	game.Players = make([]*Player, nbPlayers)
 	for index := range game.Players {
-		if index == firstPlayerID {
+		if index == FirstPlayerID {
 			game.Players[index] = NewPlayer(index, Human)
 		} else {
 			game.Players[index] = NewPlayer(index, AI)
 			game.Players[index-1].NextPlayer = game.Players[index]
 		}
 	}
-	game.firstPlayer = game.Players[firstPlayerID]
-	game.Players[nbPlayer-1].NextPlayer = game.Players[firstPlayerID]
-	game.OngoingTurn = NewTurn(firstTurnID, game.firstPlayer)
+	game.FirstPlayer = game.Players[FirstPlayerID]
+	game.Players[nbPlayers-1].NextPlayer = game.Players[FirstPlayerID]
+	game.OngoingTurn = NewTurn(FirstTurnID, game.FirstPlayer)
 	return game
 }
 
 func (game *Game) createCardDeck() {
-	game.CardDeck = make([]*Card, cardDeckSize)
+	game.CardDeck = make([]*Card, CardDeckSize)
 	for index := range game.CardDeck {
-		game.CardDeck[index] = NewCard(index, CardColor(index/nbCardByColor), CardNumber(index%nbCardByColor))
+		game.CardDeck[index] = NewCard(index, CardColor(index/NbCardByColor), CardNumber(index%NbCardByColor))
 	}
 	game.shuffleCardDeck()
 }
 
 func (game *Game) shuffleCardDeck() {
 	rand.Seed(time.Now().UnixNano())
-	rand.Shuffle(cardDeckSize, func(i, j int) { game.CardDeck[i], game.CardDeck[j] = game.CardDeck[j], game.CardDeck[i] })
+	rand.Shuffle(CardDeckSize, func(i, j int) { game.CardDeck[i], game.CardDeck[j] = game.CardDeck[j], game.CardDeck[i] })
 }
