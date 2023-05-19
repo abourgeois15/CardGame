@@ -1,5 +1,10 @@
 package game
 
+import (
+	"math/rand"
+	"time"
+)
+
 const (
 	cardDeckSize  = 52
 	nbCardByColor = 13
@@ -17,6 +22,7 @@ type Game struct {
 func NewGame() *Game {
 	game := new(Game)
 	game.createCardDeck()
+	game.shuffleCardDeck()
 	return game
 }
 
@@ -25,4 +31,9 @@ func (game *Game) createCardDeck() {
 	for index := range game.CardDeck {
 		game.CardDeck[index] = NewCard(index, CardColor(index/nbCardByColor), CardNumber(index%nbCardByColor))
 	}
+}
+
+func (game *Game) shuffleCardDeck() {
+	rand.Seed(time.Now().UnixNano())
+	rand.Shuffle(cardDeckSize, func(i, j int) { game.CardDeck[i], game.CardDeck[j] = game.CardDeck[j], game.CardDeck[i] })
 }

@@ -2,10 +2,7 @@ package main
 
 import (
 	"api/service"
-	"api/system"
 	"fmt"
-	"log"
-	"net/http"
 )
 
 const (
@@ -17,8 +14,8 @@ func main() {
 	for _, card := range service.Game.CardDeck {
 		fmt.Println(card.ID, ": ", card, " value ", card.Value)
 	}
-	r := system.SetupRouter(service)
-	if err := http.ListenAndServe(":"+port, r); err != nil {
-		log.Fatal(err)
-	}
+	// r := system.SetupRouter(service)
+	// if err := http.ListenAndServe(":"+port, r); err != nil {
+	// 	log.Fatal(err)
+	// }
 }
