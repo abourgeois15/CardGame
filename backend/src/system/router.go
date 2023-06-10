@@ -16,6 +16,9 @@ func SetupRouter(s *service.Service) chi.Router {
 		ExposedHeaders: []string{"Content-Types"},
 	}))
 	// Setting up routes
-	r.Get("/game/{NbPlayers}", s.GetGame)
+	r.Route("/game", func(r chi.Router) {
+		r.Post("/{NbPlayers}", s.CreateGame)
+		r.Get("/", s.GetGame)
+	})
 	return r
 }

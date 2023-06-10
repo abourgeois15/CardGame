@@ -8,7 +8,6 @@ import (
 	"math/rand"
 	"net/http"
 	"net/http/httptest"
-	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/suite"
@@ -33,17 +32,17 @@ func (s *GetGameTestSuite) SetupTest() {
 func (s *GetGameTestSuite) TestGetGame() {
 	var err error
 	nbPlayers := game.NbPlayersMin + rand.Intn(game.NbPlayersMax-game.NbPlayersMin)
+	s.service.Game = game.NewGame(nbPlayers)
 
 	// Create request
 	var request *http.Request
-	if request, err = http.NewRequest("GET", "/game/"+strconv.Itoa(nbPlayers), nil); !s.Nil(err) {
+	if request, err = http.NewRequest("GET", "/game", nil); !s.Nil(err) {
 		s.FailNow(err.Error())
 	}
 	recorder := httptest.NewRecorder()
 	s.T().Log("Serve endpoints")
 	s.Handler.ServeHTTP(recorder, request)
 	s.Equal(http.StatusOK, recorder.Code)
-	s.Equal(nbPlayers, s.service.Game.NbPlayers)
 
 	// Check the body
 	var content service.Content[service.GameService]
@@ -51,6 +50,9 @@ func (s *GetGameTestSuite) TestGetGame() {
 		s.FailNow(err.Error())
 	}
 	s.T().Log(content.Payload)
+
+	s.Equal("Success", content.Details)
+
 	expectedGame := s.service.Game
 	actualGame := content.Payload
 	s.Equal(expectedGame.NbPlayers, actualGame.NbPlayers)
